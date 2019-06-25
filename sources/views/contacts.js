@@ -1,3 +1,15 @@
-export default {
-	template: "Start page", css: "webix_shadow_medium app_start"
-};
+import {JetView} from "webix-jet";
+import ContactsList from "./contactsElements/contactsList";
+import ContactsProfile from "./contactsElements/contactsProfile";
+
+export default class ContactsView extends JetView {
+	config() {
+		return {
+			cols: [
+				ContactsList,
+				ContactsProfile
+			]
+		};
+	}
+}
+

@@ -56,3 +56,54 @@
 	font-size:20px;
 	vertical-align:middle;
 }
+.webix_view .webix_toolbar .webix_layout_toolbar {
+    font-size: 25px;
+}
+.userphoto {
+    display: inline-block;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.userinfo {
+    display: inline-block;
+}
+.username {
+    font-size: 18px;
+    display: block;
+    margin-left: 12px;
+}
+.userjob {
+    font-size: 12px;
+    display: block;
+    margin-left: 12px;
+}
+.usercont {
+    display: flex;
+}
+.userinfo_1 {
+    text-align: center;
+}
+.bigphoto {
+    width: 200px;
+    height: 200px;
+}
+.userinfo_2 {
+    margin-left: 40px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.userinfo_3 {
+    margin-left: 40px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.toolbarname {
+    font-size: 20px;
+    padding-top: 10px;
+}

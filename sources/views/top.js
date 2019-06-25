@@ -3,7 +3,12 @@ import {JetView, plugins} from "webix-jet";
 export default class TopView extends JetView {
 	config() {
 		let header = {
-			type: "header", template: this.app.config.name, css: "webix_header app_header"
+			view: "toolbar",
+			elements: [
+				{gravity: 1},
+				{view: "label", label: "Contacts"},
+				{gravity: 7}
+			]
 		};
 
 		let menu = {
@@ -15,9 +20,9 @@ export default class TopView extends JetView {
 			select: true,
 			template: "<span class='webix_icon #icon#'></span> #value# ",
 			data: [
-				{value: "Contacts", id: "contacts", icon: "wxi-columns"},
-				{value: "Activities", id: "activities", icon: "wxi-pencil"},
-				{value: "Settings", id: "settings", icon: "wxi-pencil"}
+				{value: "Contacts", id: "contacts", icon: "mdi mdi-account-group"},
+				{value: "Activities", id: "activities", icon: "mdi mdi-calendar-month"},
+				{value: "Settings", id: "settings", icon: "mdi mdi-cogs"}
 			]
 		};
 
@@ -25,17 +30,24 @@ export default class TopView extends JetView {
 			type: "clean",
 			paddingX: 5,
 			css: "app_layout",
-			cols: [
+			rows: [
+				header,
 				{
-					rows: [
-						{css: "webix_shadow_medium", rows: [header, menu]}]
-				},
-				{
-					type: "wide",
-					paddingY: 1,
-					paddingX: 1,
-					rows: [
-						{$subview: true}
+					cols: [
+						{
+							paddingX: 1,
+							paddingY: 1,
+							rows: [
+								{css: "webix_shadow_medium", rows: [menu]}]
+						},
+						{
+							type: "wide",
+							paddingY: 1,
+							paddingX: 1,
+							rows: [
+								{$subview: true}
+							]
+						}
 					]
 				}
 			]
