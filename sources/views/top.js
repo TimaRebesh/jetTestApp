@@ -1,14 +1,13 @@
 import {JetView, plugins} from "webix-jet";
+import {menuData} from "../models/menuData";
 
 export default class TopView extends JetView {
 	config() {
 		let header = {
-			view: "toolbar",
-			elements: [
-				{gravity: 1},
-				{view: "label", label: "Contacts"},
-				{gravity: 7}
-			]
+			type: "header",
+			id: "headerId",
+			template: obj => obj.value,
+			css: "app_header"
 		};
 
 		let menu = {
@@ -19,11 +18,7 @@ export default class TopView extends JetView {
 			layout: "y",
 			select: true,
 			template: "<span class='webix_icon #icon#'></span> #value# ",
-			data: [
-				{value: "Contacts", id: "contacts", icon: "mdi mdi-account-group"},
-				{value: "Activities", id: "activities", icon: "mdi mdi-calendar-month"},
-				{value: "Settings", id: "settings", icon: "mdi mdi-cogs"}
-			]
+			data: menuData
 		};
 
 		let ui = {
@@ -58,5 +53,15 @@ export default class TopView extends JetView {
 
 	init() {
 		this.use(plugins.Menu, "top:menu");
+	}
+
+	urlChange() {
+		const urlTab = this.getUrl()[1].page;
+		const page = this.capitalize(urlTab);
+		this.$$("headerId").setValues({value: `${page}`});
+	}
+
+	capitalize(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 }
