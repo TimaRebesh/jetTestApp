@@ -3,7 +3,7 @@ import {contacts} from "../../models/contacts";
 
 export default class ContactsView extends JetView {
 	config() {
-		return {
+		const list = {
 			view: "list",
 			localId: "Contactslist",
 			width: 300,
@@ -24,10 +24,27 @@ export default class ContactsView extends JetView {
 				}
 			}
 		};
+
+		const buttonList = {
+			view: "button",
+			label: "Add contact",
+			type: "icon",
+			icon: "wxi-plus",
+			anchoralign: "center"
+		};
+
+		const ui = {
+			rows: [
+				list,
+				buttonList
+			]
+		};
+
+		return ui;
 	}
 
-	init(view) {
-		view.sync(contacts);
+	init() {
+		this.$$("Contactslist").sync(contacts);
 
 		contacts.waitData.then(() => {
 			let list = this.$$("Contactslist");

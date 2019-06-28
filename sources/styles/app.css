@@ -110,3 +110,12 @@
 .activities_form_header {
     text-align: center;
 }
+.userphoto2 {
+    width: 150px;
+    height: 150px;
+    padding: 0px;
+    margin: 5px;
+}
+.contact_form_header {
+    font-size: 26px;
+}

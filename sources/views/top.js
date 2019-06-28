@@ -22,7 +22,6 @@ export default class TopView extends JetView {
 		};
 
 		let ui = {
-			type: "clean",
 			paddingX: 5,
 			css: "app_layout",
 			rows: [
