@@ -28,12 +28,12 @@ export default class DataView extends JetView {
 
 							view: "button",
 							type: "icon",
-							css: "webix_primary",
 							icon: "wxi-plus-square",
+							css: "webix_primary",
 							label: "Add activity",
 							autowidth: true,
 							click: () => {
-								this.form.showForm();
+								this.form.showForm({}, "Add");
 							}
 
 						}]
