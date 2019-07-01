@@ -8,7 +8,6 @@ export default class ContactsForm extends JetView {
 		return {
 			view: "form",
 			localId: "contactUserForm",
-			// borderless: true,
 			elementsConfig: {
 				labelWidth: 150
 			},

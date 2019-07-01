@@ -1,6 +1,8 @@
 import {JetView} from "webix-jet";
 import {contacts} from "../../models/contacts";
 import {statuses} from "../../models/statuses";
+import {activity} from "../models/activity";
+import ContactTable from "./contactTable";
 
 
 export default class ContactsProfile extends JetView {
@@ -43,25 +45,55 @@ export default class ContactsProfile extends JetView {
 			]
 		};
 
+		const contactTabbar = {
+			view: "tabbar",
+			multiview: true,
+			localID: "contactTabbar",
+			options: [
+				{
+					value: "Activities",
+					id: "tabActivities"
+				},
+				{
+					value: "Files",
+					id: "tabFiles"
+				}
+			],
+			height: 40
+		};
+
+		const contactTabbarElements = {
+			animate: false,
+			cells: [
+				ContactTable
+			]
+		};
+
 		const ui = {
 			rows: [
 				topbar,
-				userInfo
+				userInfo,
+				contactTabbar,
+				contactTabbarElements
 			]
 		};
 		return ui;
 	}
 
-	init() {
+	ready(view) {
+		const tableGrids = view.queryView({view: "datatable"});
+		tableGrids.hideColumn("ContactID");
 	}
 
 	urlChange() {
 		webix.promise.all([
 			contacts.waitData,
-			statuses.waitData
+			statuses.waitData,
+			activity.waitData
 		]).then(() => {
 			const id = this.getParam("id");
 			const item = contacts.getItem(id);
+			const grid = view.queryView({view: "datatable"});
 			if (item) {
 				let values = webix.copy(item);
 				values.statusString = statuses.getItem(values.StatusID).Value;
