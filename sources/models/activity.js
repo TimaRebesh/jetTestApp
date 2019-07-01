@@ -1,5 +1,6 @@
-const serverFormat = webix.Date.dateToStr("%Y-%m-%d %H:%i");
 const frontFormat = webix.Date.strToDate("%d-%m-%Y %H:%i");
+const serverFormat = webix.Date.dateToStr("%Y-%m-%d");
+const formatTime = webix.Date.dateToStr("%H:%i");
 
 export const activity = new webix.DataCollection({
 	url: "http://localhost:8096/api/v1/activities/",
@@ -7,18 +8,14 @@ export const activity = new webix.DataCollection({
 	scheme: {
 		$init: (obj) => {
 			if (!obj.NewDate) {
-				obj.NewDate = new Date(frontFormat(obj.DueDate));
+				obj.NewDate = frontFormat(obj.DueDate);
 			}
 			if (!obj.NewTime) {
-				obj.NewTime = new Date(obj.NewDate);
+				obj.NewTime = obj.NewDate;
 			}
 		},
 		$save: (obj) => {
-			obj.DueDate = new Date(obj.NewDate);
-			obj.DueTime = new Date(obj.NewTime);
-			obj.DueDate.setHours(obj.DueTime.getHours());
-			obj.DueDate.setMinutes(obj.DueTime.getMinutes());
-			obj.DueDate = serverFormat(obj.DueDate);
+			obj.DueDate = `${serverFormat(obj.NewDate)} ${formatTime(obj.NewTime)}`;
 		}
 	}
 });

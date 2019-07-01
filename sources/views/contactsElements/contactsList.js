@@ -10,10 +10,10 @@ export default class ContactsView extends JetView {
 			select: true,
 			type: {
 				template: obj => `
-				<image class="userphoto" src="${obj.Photo}" />
+				<image class="userphoto" src="${obj.Photo || "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg"}" />
 				<div class="userinfo">
 					<span class="username">${obj.FirstName} ${obj.LastName}</span>
-					<span class="userjob">${obj.Job}</span>
+					<span class="userjob">${obj.Job || " "}</span>
 				</div>
 				`,
 				height: 70
@@ -51,7 +51,7 @@ export default class ContactsView extends JetView {
 			let id = this.getParam("id");
 
 			if (!id || !contacts.exists(id)) { id = contacts.getFirstId(); }
-			if (id) { list.select(id); }
+			if (id && id !== list.getSelectedId()) { list.select(id); }
 		});
 	}
 }

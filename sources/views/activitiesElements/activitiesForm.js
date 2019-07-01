@@ -19,7 +19,8 @@ export default class ActivityForm extends JetView {
 				elements: [
 					{
 						view: "template",
-						template: "Add (*edit) activity",
+						id: "changeValue",
+						template: editType => `${editType} activity`,
 						type: "header",
 						css: "activities_form_header"
 					},
@@ -54,6 +55,7 @@ export default class ActivityForm extends JetView {
 							{
 								view: "datepicker",
 								value: "10:00",
+								format: "%H:%i",
 								type: "time",
 								name: "NewTime",
 								label: "Time",
@@ -63,6 +65,8 @@ export default class ActivityForm extends JetView {
 					},
 					{
 						view: "checkbox",
+						checkValue: "open",
+						uncheckValue: "close",
 						name: "State",
 						labelRight: "Completed"
 					},
@@ -70,13 +74,12 @@ export default class ActivityForm extends JetView {
 						{gravity: 2},
 						{
 							view: "button",
-							value: "Add (*save)",
+							localId: "activityButton",
 							type: "form",
 							css: "webix_primary",
 							click: () => {
 								const activityform = this.$$("activityform");
 								let value = activityform.getValues();
-								activityform.clearValidation();
 								if (activityform.validate()) {
 									if (value.id) {
 										activity.updateItem(value.id, value);
@@ -92,7 +95,7 @@ export default class ActivityForm extends JetView {
 							view: "button",
 							value: "Cancel",
 							click: () => {
-								this.$$("myWindow").hide();
+								this.hideForm();
 							}
 						}
 					]},
@@ -108,26 +111,19 @@ export default class ActivityForm extends JetView {
 	init(view) {
 		this.form = view.getBody();
 
-		this.on(this.app, "form:fill", (values) => {
-			view.show();
-			this.form.setValues(values);
+		this.on(this.app, "show:editWindow", (data) => {
+			let mode = data ? "Edit" : "Add";
+			this.$$("changeValue").setValues(mode);
+			this.$$("activityButton").setValue(mode);
+			if (data) this.form.setValues(data);
+			this.getRoot().show();
 		});
 	}
 
-	showForm() {
-		this.getRoot().show();
-	}
-
 	hideForm() {
-		this.getRoot().hide();
-		this.form.clear();
 		this.form.clearValidation();
-	}
-
-	urlChange() {
-		webix.promise.all([
-			activitytypes.waitData,
-			contacts.waitData
-		]);
+		this.form.clear();
+		this.$$("myWindow").hide();
 	}
 }
+

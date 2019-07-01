@@ -18,6 +18,8 @@ export default class ActivitiesDataTable extends JetView {
 					header: "",
 					id: "State",
 					template: "{common.checkbox()}",
+					checkValue: "open",
+					uncheckValue: "close",
 					width: 50
 				},
 				{
@@ -29,7 +31,7 @@ export default class ActivitiesDataTable extends JetView {
 					width: 300
 				},
 				{
-					header: ["Due date", {content: "dateRangeFilter"}],
+					header: ["Due date", {content: "datepickerFilter", inputConfig: {format: webix.i18n.longDateFormatStr}}],
 					id: "NewDate",
 					format: webix.i18n.longDateFormatStr,
 					sort: "date",
@@ -68,14 +70,15 @@ export default class ActivitiesDataTable extends JetView {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
 						text: "Are you sure?",
-						callback: (res) => {
-							if (res) this.app.callEvent("activity:delete", [id.row]);
+						callback: (result) => {
+							if (result) activity.remove(id);
 						}
 					});
+					return false;
 				},
 				"wxi-pencil": (e, id) => {
 					const item = this.getRoot().getItem(id);
-					this.app.callEvent("form:fill", [item]);
+					this.app.callEvent("show:editWindow", [item]);
 				}
 			}
 		};
