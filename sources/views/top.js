@@ -13,7 +13,7 @@ export default class TopView extends JetView {
 		let menu = {
 			view: "menu",
 			id: "top:menu",
-			css: "app_menu",
+			css: "app_menu webix_shadow_medium",
 			width: 180,
 			layout: "y",
 			select: true,
@@ -35,18 +35,8 @@ export default class TopView extends JetView {
 				header,
 				{
 					cols: [
-						{
-							css: "webix_shadow_medium",
-							rows: [menu]
-						},
-						{
-							type: "wide",
-							paddingY: 1,
-							paddingX: 1,
-							rows: [
-								{$subview: true}
-							]
-						}
+						menu,
+						{$subview: true}
 					]
 				}
 			]

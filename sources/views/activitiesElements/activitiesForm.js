@@ -20,7 +20,7 @@ export default class ActivityForm extends JetView {
 					{
 						view: "template",
 						id: "changeValue",
-						template: obj => obj.value,
+						template: editType => `${editType} activity`,
 						type: "header",
 						css: "activities_form_header"
 					},
@@ -95,7 +95,6 @@ export default class ActivityForm extends JetView {
 							view: "button",
 							value: "Cancel",
 							click: () => {
-								this.$$("myWindow").hide();
 								this.hideForm();
 							}
 						}
@@ -112,19 +111,19 @@ export default class ActivityForm extends JetView {
 	init(view) {
 		this.form = view.getBody();
 
-		this.on(this.app, "form:fill", (values) => {
-			this.showForm({}, "Save");
-			this.form.setValues(values);
+		this.on(this.app, "show:editWindow", (data) => {
+			let mode = data ? "Edit" : "Add";
+			this.$$("changeValue").setValues(mode);
+			this.$$("activityButton").setValue(mode);
+			if (data) this.form.setValues(data);
+			this.getRoot().show();
 		});
 	}
 
-	showForm(data, type) {
-		this.getRoot().show();
-		this.$$("changeValue").setValues({value: `${type} activity`});
-		this.$$("activityButton").setValue(type);
-	}
-
 	hideForm() {
+		this.form.clearValidation();
 		this.form.clear();
+		this.$$("myWindow").hide();
 	}
 }
+

@@ -34,7 +34,7 @@ export default class ContactsView extends JetView {
 			let id = this.getParam("id");
 
 			if (!id || !contacts.exists(id)) { id = contacts.getFirstId(); }
-			if (id) { list.select(id); }
+			if (id && id !== list.getSelectedId()) { list.select(id); }
 		});
 	}
 }

@@ -33,7 +33,7 @@ export default class DataView extends JetView {
 							label: "Add activity",
 							autowidth: true,
 							click: () => {
-								this.form.showForm({}, "Add");
+								this.app.callEvent("show:editWindow", [null]);
 							}
 
 						}]
@@ -47,8 +47,10 @@ export default class DataView extends JetView {
 		this.form = this.ui(ActivityForm);
 
 		this.on(this.app, "activity:save", (values) => {
-			// eslint-disable-next-line no-unused-expressions
-			values.id ? activity.updateItem(values.id, values) : activity.add(values);
+			if (values.id) {
+				activity.updateItem(values.id, values);
+			}
+			else { activity.add(values); }
 		});
 
 		this.on(this.app, "activity:delete", id => activity.remove(id));

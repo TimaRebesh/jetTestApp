@@ -9,7 +9,7 @@ export default class ContactsProfile extends JetView {
 			view: "toolbar",
 			borderless: true,
 			elements: [
-				{template: "#FirstName# #LastName#", localId: "test", width: 200, height: 50, borderless: true, css: "toolbarname"},
+				{template: "#FirstName# #LastName#", localId: "headName", width: 200, height: 50, borderless: true, css: "toolbarname"},
 				{},
 				{view: "button", label: "Delete", type: "icon", icon: "wxi-trash", width: 100},
 				{view: "button", label: "Edit", type: "icon", icon: "mdi mdi-file-document-edit", width: 100}
@@ -61,10 +61,13 @@ export default class ContactsProfile extends JetView {
 			statuses.waitData
 		]).then(() => {
 			const id = this.getParam("id");
-			const values = contacts.getItem(id);
-			if (values) { this.$$("template").setValues(values); }
-			values.statusString = statuses.getItem(values.StatusID).Value;
-			this.$$("test").parse(values);
+			const item = contacts.getItem(id);
+			if (item) {
+				let values = webix.copy(item);
+				values.statusString = statuses.getItem(values.StatusID).Value;
+				this.$$("headName").parse(values);
+				this.$$("template").setValues(values);
+			}
 		});
 	}
 }
