@@ -43,9 +43,11 @@
         -webkit-transform: translateX(0);
     }
 }
-.app_header{
-	padding-left: 160px;
+.app_header.webix_header{
+    padding-left: 160px;
 }
+
+
 .app_layout.webix_layout_clean{
 	background: #EBEDF0;
 }
@@ -56,14 +58,67 @@
 	font-size:20px;
 	vertical-align:middle;
 }
-.webix_view .webix_toolbar .webix_layout_toolbar {
-    font-size: 25px;
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 }
+  
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+.wrapper.card .row {
+    align-items: center;
+}
+
+.wrapper .contacts_name {
+    margin: 15px 0 15px 16px;
+}
+
+.row2 .column1 {
+    align-items: center;
+}
+
+.wrapper .photo {
+    width: 200px;
+    height: 200px;
+    border: 1px solid black
+}
+
+.wrapper .label {
+    text-align: center;
+}
+
+.wrapper .mdi {
+    margin: 10px;
+    font-size: 16px;
+}
+
+.wrapper .mdi::before {
+    margin: 0 5px 0 0;
+}
+
+.info h2 {
+    font-size: 34px;
+}
+
+.webix_template h2 {
+    margin: 0;
+}
+
 .userphoto {
     display: inline-block;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
+    margin-top: 10px; 
+    object-fit: cover;  
 }
 
 .userinfo {
@@ -85,37 +140,7 @@
 .userinfo_1 {
     text-align: center;
 }
+
 .bigphoto {
-    width: 200px;
-    height: 200px;
-}
-.userinfo_2 {
-    margin-left: 40px;
-    font-size: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-.userinfo_3 {
-    margin-left: 40px;
-    font-size: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-.toolbarname {
-    font-size: 20px;
-    padding-top: 10px;
-}
-.activities_form_header {
-    text-align: center;
-}
-.userphoto2 {
-    width: 150px;
-    height: 150px;
-    padding: 0px;
-    margin: 5px;
-}
-.contact_form_header {
-    font-size: 26px;
+    object-fit: cover;
 }

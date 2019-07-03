@@ -1,30 +1,92 @@
 import {JetView} from "webix-jet";
-import ContactsList from "./contactsElements/contactsList";
+import {contacts} from "../models/contacts";
+import ContactInfo from "./contactsElements/contactsProfile";
+import ContactsForm from "./contactsElements/contactsForm";
 
 export default class ContactsView extends JetView {
 	config() {
+		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
+
+		const contactsList = {
+			view: "list",
+			localId: "Contactslist",
+			width: 300,
+			select: true,
+			scroll: "auto",
+			template: obj => `
+				<image class="userphoto" src="${obj.Photo || defaultPhoto}" />
+				<div class="userinfo">
+					<span class="username">${obj.FirstName} ${obj.LastName}</span>
+					<span class="userjob">${obj.Company || " "}</span>
+				</div>
+				`,
+			type: {
+				width: "auto",
+				height: 70
+			},
+			on: {
+				onAfterSelect: (id) => {
+					this.setParam("id", id, true);
+				}
+			}
+		};
+
+		const buttonList = {
+			view: "button",
+			type: "icon",
+			icon: "mdi mdi-plus-box",
+			label: "Add contact",
+			css: "webix_primary",
+			click: () => {
+				contacts.add({FirstName: "New", LastName: "User", StatusID: 1});
+				this.app.callEvent("addContact", [null, "Add"]);
+				webix.$$("top:contactsForm").show(false, false);
+			}
+		};
+
 		return {
 			cols: [
-				ContactsList,
-				{$subview: true}
-			]
+				{
+					rows: [
+						contactsList,
+						buttonList
+					]
+				},
+				{cells: [
+					{$subview: ContactInfo, id: "top:contactsInfo"},
+					{$subview: ContactsForm, id: "top:contactsForm"}
+				]
+				}
+			],
+			type: "section"
 		};
 	}
 
 	init() {
-		this.show("contactsElements.contactsProfile");
-		this.on(this.app, "contact:switch", (id) => {
-			this.setParam("id", id, true);
-		});
-		this.on(this.app, "contact:return", (id) => {
-			this.setParam("id", id, true);
-			this.show("contactsElements.contactsProfile");
-		});
-	}
+		let contactsList = this.$$("Contactslist");
 
-	showForm() {
-		this.show("contactsElements.contactsForm").then(() => {
+		contactsList.sync(contacts);
 
+		contacts.waitData.then(() => {
+			let id = this.getParam("id");
+
+			contactsList.data.attachEvent("onIdChange", () => {
+				contactsList.select(contacts.getLastId());
+			});
+
+			contacts.attachEvent("onAfterDelete", () => {
+				contactsList.select(contacts.getFirstId());
+			});
+
+			if (!contacts.exists(id)) {
+				contactsList.select(contacts.getFirstId());
+			}
+			else if (id && id !== contactsList.getSelectedId()) {
+				contactsList.select(id);
+			}
+
+			const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
+			this.$$("photoPreview").setValues(defaultPhoto);
 		});
 	}
 }

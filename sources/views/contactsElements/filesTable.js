@@ -1,96 +1,78 @@
 import {JetView} from "webix-jet";
-import {files} from "../../models/files";
 import {contacts} from "../../models/contacts";
+import {fileStorage} from "../../models/fileStorage";
 
-export default class FilesDataTable extends JetView {
+export default class FilesTable extends JetView {
 	config() {
 		return {
-			id: "contact:files",
 			rows: [
 				{
 					view: "datatable",
-					localId: "datatable",
+					localId: "files",
+					scroll: "auto",
 					select: true,
 					columns: [
-						{
-							id: "name",
-							header: "Name",
-							fillspace: true,
-							sort: "string"
-						},
-						{
-							id: "ChangeDate",
-							header: "Change date",
-							fillspace: true,
-							sort: "date",
-							format: webix.i18n.longDateFormatStr
-						},
+						{id: "name", header: "Name", template: "", fillspace: true, sort: "string"},
+						{id: "date", header: "Change date", template: "", width: 150, sort: "date", format: webix.i18n.longDateFormatStr},
 						{
 							id: "size",
 							header: "Size",
-							fillspace: true,
 							template: obj => `${obj.size}Kb`,
 							sort: "int"
 						},
-						{
-							id: "",
-							template: "{common.trashIcon()}",
-							width: 60
-						}
-
+						{id: "deleteFile", header: "", width: 50, template: "<span class='mdi mdi-trash-can delete_file'></span>"}
 					],
 					onClick: {
-						"wxi-trash": (e, id) => {
+						delete_file: (e, id) => {
 							webix.confirm({
-								text: "The file will be deleted. Deleting cannot be undone... <br/> Are you sure?"
+								title: "Delete this file",
+								text: "Are you sure you want to delete this file?"
 							}).then(() => {
-								if (id) { files.remove(id); }
+								this.$$("files").remove(id);
 							});
 							return false;
 						}
 					}
 				},
-				{cols: [
-					{},
-					{
-						view: "uploader",
-						id: "uploader",
-						type: "iconButton",
-						icon: "mdi mdi-upload",
-						label: "Upload file",
-						width: 200,
-						on: {
-							onBeforeFileAdd: (file) => {
-								const id = this.getParam("id", true);
-								if (id && contacts.exists(id)) {
-									const values = {
-										name: file.name,
-										size: Math.round(file.size / 1000),
-										ChangeDate: file.file.lastModifiedDate,
-										ContactID: id
-									};
-									files.add(values);
-								}
-								return false;
-							},
-							onFileUploadError: () => {
-								webix.alert("Upload failed.");
-							}
-						}
-					},
-					{}
-				]
-				}
+				{
+					cols: [
+						{},
+						{
+							view: "uploader",
+							localId: "uploadFiles",
+							type: "icon",
+							icon: "mdi mdi-cloud-upload",
+							label: "Upload file",
+							css: "webix_primary"
+						},
+						{}
+					]}
 			]
 		};
 	}
 
-	init(view) {
-		view.queryView("datatable").sync(files);
+	init() {
+		this.$$("files").sync(fileStorage);
+
+		let id = this.getParam("id");
+
+		this.$$("uploadFiles").attachEvent("onBeforeFileAdd", (obj) => {
+			let item = {
+				name: obj.name,
+				size: obj.size,
+				date: obj.file.lastModifiedDate,
+				ContactID: id
+			};
+			fileStorage.add(item);
+			return false;
+		});
 	}
 
 	urlChange() {
-		const id = this.getParam("id", true);
-		files.data.filter(file => file.ContactID.toString() === id);
+		contacts.waitData.then(() => {
+			let id = this.getParam("id");
+
+			fileStorage.filter(obj => obj.ContactID.toString() === id.toString());
+		});
 	}
 }

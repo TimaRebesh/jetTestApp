@@ -2,227 +2,253 @@ import {JetView} from "webix-jet";
 import {contacts} from "../../models/contacts";
 import {statuses} from "../../models/statuses";
 
-
 export default class ContactsForm extends JetView {
 	config() {
+		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 		return {
-			view: "form",
-			localId: "contactUserForm",
-			id: "contact:form",
-			elementsConfig: {
-				labelWidth: 150
-			},
-			rules: {
-				$all: webix.rules.isNotEmpty
-			},
-			elements: [
+			rows: [
 				{
-					view: "label",
-					template: obj => obj.value,
-					css: "contact_form_header",
-					height: 40
+					template: "Edit (add new) contact",
+					localId: "formHeader",
+					height: 50,
+					borderless: true
 				},
-				{
-					cols: [
-						{
-							rows: [
+				{cols: [
+					{
+						view: "form",
+						localId: "editContact",
+						borderless: true,
+						elementsConfig: {
+							labelWidth: 150
+						},
+						rules: {
+							FirstName: webix.rules.isNotEmpty,
+							LastName: webix.rules.isNotEmpty,
+							StartDate: webix.rules.isNotEmpty,
+							birthDate: webix.rules.isNotEmpty
+						},
+						cols: [
+							{rows: [
 								{
 									view: "text",
-									name: "FirstName",
 									label: "First name",
-									placeholder: "first name"
+									name: "FirstName"
 								},
 								{
 									view: "text",
-									name: "LastName",
 									label: "Last name",
-									placeholder: "last name"
+									name: "LastName"
 								},
 								{
 									view: "datepicker",
+									label: "Joining date",
 									name: "StartDate",
-									label: "Joining date"
+									format: webix.i18n.longDateFormatStr,
+									invalidMessage: "Please select a date"
 								},
 								{
-									view: "combo",
-									name: "StatusID",
+									view: "richselect",
 									label: "Status",
+									name: "StatusID",
 									options: statuses
 								},
 								{
 									view: "text",
-									name: "Job",
 									label: "Job",
-									placeholder: "job"
+									name: "Job"
 								},
 								{
 									view: "text",
-									name: "Company",
 									label: "Company",
-									placeholder: "company"
+									name: "Company"
 								},
 								{
 									view: "text",
-									name: "Webside",
-									label: "Webside",
+									label: "Website",
+									name: "Website",
 									placeholder: "some website"
 								},
 								{
 									view: "text",
-									name: "Address",
 									label: "Address",
-									placeholder: "address"
-								}
-							]
-						},
-						{gravity: 0.2},
-						{
-							rows: [
+									name: "Address"
+								},
+								{}
+							],
+							margin: 20
+							},
+							{gravity: 0.2},
+							{rows: [
 								{
 									view: "text",
-									name: "Email",
 									label: "Email",
-									placeholder: "email"
+									name: "Email"
 								},
 								{
 									view: "text",
-									name: "Skype",
 									label: "Skype",
-									placeholder: "some Skype"
+									name: "Skype"
 								},
 								{
 									view: "text",
-									name: "Phone",
 									label: "Phone",
-									placeholder: "phone number"
+									name: "Phone"
 								},
 								{
 									view: "datepicker",
-									name: "Birthday",
 									label: "Birthday",
+									name: "birthDate",
+									format: webix.i18n.longDateFormatStr,
 									invalidMessage: "Please select a date"
 								},
 								{
-
 									cols: [
 										{
-											view: "template",
+											template: obj => `<img class="bigphoto" src=${obj || defaultPhoto} width=200 height=200></img>`,
+											localId: "photoPreview",
 											name: "Photo",
-											borderless: true,
-											localId: "photo",
-											id: "photo:contact",
-											template: obj => `
-               							    	 <image class="userphoto2" src="${obj.Photo ? obj.Photo : "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg"}" />
-                							`
+											width: 250,
+											height: 250,
+											borderless: true
 										},
 										{
+											margin: 10,
 											rows: [
 												{},
 												{
 													view: "uploader",
 													value: "Change photo",
 													accept: "image/jpeg, image/png",
-													autosend: false,
-													multiple: false,
+													multiple: "false",
 													on: {
-														onBeforeFileAdd: (upload) => {
-															let file = upload.file;
+														onBeforeFileAdd: (img) => {
 															let reader = new FileReader();
 															reader.onload = (event) => {
-																this.photo = event.target.result;
-																webix.$$("photo:contact").setValues({Photo: this.photo});
+																this.$$("photoPreview").setValues(event.target.result);
 															};
-															reader.readAsDataURL(file);
+															reader.readAsDataURL(img.file);
 															return false;
 														}
 													}
 												},
 												{
 													view: "button",
-													value: "Delete photo"
-												}
+													value: "Delete photo",
+													click: () => {
+														let item = contacts.getItem(this.getParam("id"));
+														this.$$("photoPreview").setValues(defaultPhoto);
+														item.Photo = "";
+													}
+												},
+												{gravity: 0.3}
 											]
 										}
 									]
-								}
-							]
-						}
-					]
+								},
+								{}
+							],
+							margin: 20
+							}
+						]
+					}
+				]
 				},
-				{},
-				{
-					cols: [
-						{gravity: 4},
-						{
-							view: "button",
-							type: "form",
-							value: "Cancel",
-							click: () => {
-								this.closeForm();
-							}
-						},
-						{
-							view: "button",
-							type: "form",
-							value: "Add",
-							id: "save:contactform",
-							click: () => {
-								this.addNewContact();
-								this.closeForm();
-							}
-
+				{cols: [
+					{},
+					{
+						view: "button",
+						value: "Cancel",
+						click: () => {
+							this.closeForm();
 						}
-					]
-				}
+					},
+					{
+						view: "button",
+						value: "Save(add)",
+						localId: "saveContact",
+						css: "webix_primary",
+						click: () => {
+							this.addNewContact();
+						}
+					}
+				]}
 			]
 		};
 	}
 
 	init() {
-		this.contactList = webix.$$("contacts:list");
-		this.form = this.$$("contactUserForm");
-		const id = this.getParam("id", true);
-		contacts.waitData.then(() => {
-			if (id && contacts.exists(id)) {
-				const photo = contacts.getItem(id).Photo;
-				this.photo = photo;
-			}
+		let updateButton = this.$$("saveContact");
+		let formHeader = this.$$("formHeader");
+
+		this.on(this.app, "addContact", (item, mode) => {
+			formHeader.setHTML(`<h2>${mode} new contact</h2>`);
+			updateButton.setValue(`${mode}`);
+			this.$$("editContact").setValues({FirstName: "New", LastName: "User", StatusID: 1});
+		});
+
+		this.on(this.app, "editContact", (item, mode) => {
+			formHeader.setHTML(`<h2>${mode} contact</h2>`);
+			updateButton.setValue("Save");
+			this.$$("editContact").setValues(item);
 		});
 	}
 
 	urlChange() {
-		let form = this.$$("contactUserForm");
-		const id = this.getParam("id", true);
 		webix.promise.all([
 			contacts.waitData,
 			statuses.waitData
 		]).then(() => {
-			const values = contacts.getItem(id);
-			if (values) { form.setValues(values, true); }
+			let id = this.getParam("id");
+			let item = contacts.getItem(id);
+			const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
+			this.$$("photoPreview").setValues(defaultPhoto);
+			this.$$("editContact").setValues(item);
 		});
 	}
 
-	addNewContact() {
-		this.contactList = webix.$$("contacts:list");
-		const values = this.form.getValues();
-		const id = values.id;
-		this.newID = contacts.getLastId();
-		if (contacts.exists(id)) {
-			values.Photo = this.photo;
-			contacts.updateItem(id, values);
-			this.contactsList.select(id);
-		}
-		else {
-			contacts.add(values);
-			values.Photo = this.photo;
-			this.contactList.select(contacts.getLastId());
-		}
-	}
+	// urlChange() {
+	// 	webix.promise.all([
+	// 		contacts.waitData,
+	// 		statuses.waitData
+	// 	]).then(
+	// 		() => {
+	// 			const mode = this.getParam("mode", true);
+	// 			const contactPhoto = this.$$("photoPreview");
+	// 			if (mode === "Add") {
+	// 				contactPhoto.setValues({Photo: "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg"});
+	// 			}
+	// 			if (mode === "Edit") {
+	// 				contactPhoto.setValues({Photo: contacts.Photo});
+	// 			}
+	// 		}
+	// 	);
+	// }
 
 
 	closeForm() {
-		const id = this.getParam("id", true);
-		this.app.callEvent("contact:return", [id]);
-		this.form = "";
+		let form = this.$$("editContact");
+		let value = this.$$("saveContact").getValue();
+		if (value === "Add") {
+			contacts.remove(contacts.getLastId());
+		}
+		webix.$$("top:contactsInfo").show(false, false);
+		form.clear();
+		form.clearValidation();
+	}
+
+	addNewContact() {
+		let id = this.getParam("id");
+		let form = this.$$("editContact");
+		let value = form.getValues();
+		if (form.validate()) {
+			value.Photo = this.$$("photoPreview").getValues();
+			if (contacts.exists(id)) {
+				contacts.updateItem(id, value);
+			}
+			webix.message("Entry successfully saved");
+			form.clearValidation();
+			form.clear();
+			webix.$$("top:contactsInfo").show(false, false);
+		}
 	}
 }
