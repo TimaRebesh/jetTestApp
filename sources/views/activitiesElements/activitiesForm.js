@@ -38,9 +38,11 @@ export default class ActivityForm extends JetView {
 						invalidMessage: "Please select a type"
 					},
 					{
-						view: "richselect",
+						view: "combo",
 						name: "ContactID",
 						label: "Contact",
+						localId: "ContactCombo",
+						id: "ContactComboAct",
 						options: contacts,
 						invalidMessage: "Please select a contact"
 					},
@@ -88,6 +90,7 @@ export default class ActivityForm extends JetView {
 										activity.add(value);
 									}
 									this.$$("myWindow").hide();
+									this.setEnable();
 								}
 							}
 						},
@@ -96,6 +99,7 @@ export default class ActivityForm extends JetView {
 							value: "Cancel",
 							click: () => {
 								this.hideForm();
+								this.setEnable();
 							}
 						}
 					]},
@@ -118,6 +122,13 @@ export default class ActivityForm extends JetView {
 			if (data) this.form.setValues(data);
 			this.getRoot().show();
 		});
+	}
+
+	setEnable() {
+		const ContactCombo = webix.$$("ContactComboAct");
+		if (!ContactCombo.isEnabled()) {
+			ContactCombo.enable();
+		}
 	}
 
 	hideForm() {

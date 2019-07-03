@@ -61,11 +61,6 @@ export default class ActivitiesDataTable extends JetView {
 					width: 40
 				}
 			],
-			on: {
-				onAfterSelect: (id) => {
-					this.show(`../activities?id=${id}`);
-				}
-			},
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
@@ -92,7 +87,7 @@ export default class ActivitiesDataTable extends JetView {
 			statuses.waitData
 		]).then(
 			() => {
-				this.$$("activities").parse(activity);
+				this.$$("activities").sync(activity);
 			}
 		);
 	}

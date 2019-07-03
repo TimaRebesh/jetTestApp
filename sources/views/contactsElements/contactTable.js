@@ -43,6 +43,7 @@ export default class ContactTable extends JetView {
 			else { activity.add(values); }
 		});
 
+
 		this.on(this.app, "activity:delete", id => activity.remove(id));
 	}
 }

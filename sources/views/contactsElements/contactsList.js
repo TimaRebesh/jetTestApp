@@ -1,11 +1,13 @@
 import {JetView} from "webix-jet";
 import {contacts} from "../../models/contacts";
+// import {activity} from "../../models/activity";
 
 export default class ContactsView extends JetView {
 	config() {
 		const list = {
 			view: "list",
 			localId: "Contactslist",
+			id: "contacts:list",
 			width: 300,
 			select: true,
 			type: {
@@ -20,7 +22,7 @@ export default class ContactsView extends JetView {
 			},
 			on: {
 				onAfterSelect: (id) => {
-					this.show(`../contacts?id=${id}`);
+					this.app.callEvent("contact:switch", [id]);
 				}
 			}
 		};
@@ -28,9 +30,25 @@ export default class ContactsView extends JetView {
 		const buttonList = {
 			view: "button",
 			label: "Add contact",
+			localId: "buttonAddList",
 			type: "icon",
 			icon: "wxi-plus",
-			anchoralign: "center"
+			value: "Add",
+			anchoralign: "center",
+			scrol: "auto",
+			click: () => {
+				// this.$$("Contactslist").unselect();
+				// this.show("../contacts");
+
+				this.getParentView().showForm();
+				this.$$("Contactslist").disable();
+
+				this.setParam("id", "");
+
+
+				// const form = webix.$$("contact:form");
+				// form.clear();
+			}
 		};
 
 		const ui = {
@@ -46,9 +64,13 @@ export default class ContactsView extends JetView {
 	init() {
 		this.$$("Contactslist").sync(contacts);
 
+		this.on(this.app, "contact:return", () => {
+			this.$$("Contactslist").enable();
+		});
+
 		contacts.waitData.then(() => {
 			let list = this.$$("Contactslist");
-			let id = this.getParam("id");
+			let id = this.getParam("id", true);
 
 			if (!id || !contacts.exists(id)) { id = contacts.getFirstId(); }
 			if (id && id !== list.getSelectedId()) { list.select(id); }

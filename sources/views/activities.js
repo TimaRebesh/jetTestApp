@@ -54,5 +54,9 @@ export default class DataView extends JetView {
 		});
 
 		this.on(this.app, "activity:delete", id => activity.remove(id));
+
+		activity.waitData.then(() => {
+			activity.data.filter();
+		});
 	}
 }
