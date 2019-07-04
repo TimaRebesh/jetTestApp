@@ -7,6 +7,25 @@ export default class ContactsView extends JetView {
 	config() {
 		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 
+		const contactsFilter = {
+			view: "text",
+			localId: "inputFilter",
+			height: 50,
+			placeholder: "type to find matching contact",
+			on: {
+				onTimedKeyPress: () => {
+					let value = this.$$("inputFilter").getValue().toLowerCase();
+					this.$$("Contactslist").filter((obj) => {
+						let fullName = [obj.FirstName, obj.LastName].join(" ");
+						let lastName = obj.LastName.toLowerCase().indexOf(value);
+						let company = obj.Company.toLowerCase().indexOf(value);
+						fullName = fullName.toString().toLowerCase().indexOf(value);
+						return fullName !== -1 || lastName !== -1 || company !== -1;
+					});
+				}
+			}
+		};
+
 		const contactsList = {
 			view: "list",
 			localId: "Contactslist",
@@ -48,6 +67,7 @@ export default class ContactsView extends JetView {
 			cols: [
 				{
 					rows: [
+						contactsFilter,
 						contactsList,
 						buttonList
 					]

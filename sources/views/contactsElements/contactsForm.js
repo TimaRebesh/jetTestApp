@@ -2,9 +2,22 @@ import {JetView} from "webix-jet";
 import {contacts} from "../../models/contacts";
 import {statuses} from "../../models/statuses";
 
+
+webix.protoUI({
+	name: "template2",
+	$allowsClear: true,
+	getValue() {
+		return this.getValues();
+	},
+	setValue(value) {
+		this.setValues(value);
+	}
+}, webix.ui.template);
+
+const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
+
 export default class ContactsForm extends JetView {
 	config() {
-		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 		return {
 			rows: [
 				{
@@ -104,7 +117,8 @@ export default class ContactsForm extends JetView {
 								{
 									cols: [
 										{
-											template: obj => `<img class="bigphoto" src=${obj || defaultPhoto} width=200 height=200></img>`,
+											template: obj => `<img class="bigphoto" src=${obj} width=200 height=200></img>`,
+											view: "template2",
 											localId: "photoPreview",
 											name: "Photo",
 											width: 250,
@@ -200,7 +214,6 @@ export default class ContactsForm extends JetView {
 		]).then(() => {
 			let id = this.getParam("id");
 			let item = contacts.getItem(id);
-			const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 			this.$$("photoPreview").setValues(defaultPhoto);
 			this.$$("editContact").setValues(item);
 		});
@@ -246,9 +259,9 @@ export default class ContactsForm extends JetView {
 				contacts.updateItem(id, value);
 			}
 			webix.message("Entry successfully saved");
+			webix.$$("top:contactsInfo").show(false, false);
 			form.clearValidation();
 			form.clear();
-			webix.$$("top:contactsInfo").show(false, false);
 		}
 	}
 }
