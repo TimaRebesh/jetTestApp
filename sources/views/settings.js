@@ -1,10 +1,15 @@
 import {JetView} from "webix-jet";
-
+// import {statuses} from "../../models/statuses";
+// import {activityTypes} from "../../models/activityTypes";
 export default class SettingsView extends JetView {
 	config() {
+		const lang = this.app.getService("locale").getLang();
+
 		const segmented = {
 			view: "segmented",
-			inputWidth: 250,
+			value: lang,
+			id: "SegmentedLanguage",
+			inputWidth: 300,
 			options: [
 				{id: "en", value: "EN"},
 				{id: "ru", value: "RU"}
@@ -15,9 +20,21 @@ export default class SettingsView extends JetView {
 
 		return {
 			rows: [
-				segmented
+				segmented,
+				{
+					cols: [
+						{},
+						{}
+					]
+				}
 			]
 		};
+	}
+
+	toggleLanguage() {
+		const langs = this.app.getService("locale");
+		const value = this.$$("SegmentedLanguage").getValue();
+		langs.setLang(value);
 	}
 }
 

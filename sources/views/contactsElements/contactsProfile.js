@@ -7,6 +7,8 @@ import {statuses} from "../../models/statuses";
 
 export default class ContactInfo extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 
 		return {
@@ -44,7 +46,7 @@ export default class ContactInfo extends JetView {
 							{cols: [
 								{
 									view: "button",
-									label: "Delete",
+									label: _("Delete"),
 									css: "webix_primary",
 									type: "icon",
 									icon: "mdi mdi-trash-can",
@@ -65,7 +67,7 @@ export default class ContactInfo extends JetView {
 								},
 								{
 									view: "button",
-									label: "Edit",
+									label: _("Edit"),
 									css: "webix_primary",
 									type: "icon",
 									icon: "mdi mdi-file-document-edit",
@@ -77,7 +79,7 @@ export default class ContactInfo extends JetView {
 									}
 								}
 							],
-							width: 200},
+							width: 300},
 							{}
 						]}
 					]
@@ -86,8 +88,8 @@ export default class ContactInfo extends JetView {
 					view: "segmented",
 					multiview: true,
 					options: [
-						{id: "activitiesSwitch", value: "Activities"},
-						{id: "filesSwitch", value: "Files"}
+						{id: "activitiesSwitch", value: _("Activities")},
+						{id: "filesSwitch", value: _("Files")}
 					]
 				},
 				{

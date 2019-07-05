@@ -5,13 +5,15 @@ import ContactsForm from "./contactsElements/contactsForm";
 
 export default class ContactsView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 
 		const contactsFilter = {
 			view: "text",
 			localId: "inputFilter",
 			height: 50,
-			placeholder: "type to find matching contact",
+			placeholder: _("type to find matching contact"),
 			on: {
 				onTimedKeyPress: () => {
 					let value = this.$$("inputFilter").getValue().toLowerCase();
@@ -54,7 +56,7 @@ export default class ContactsView extends JetView {
 			view: "button",
 			type: "icon",
 			icon: "mdi mdi-plus-box",
-			label: "Add contact",
+			label: _("Add contact"),
 			css: "webix_primary",
 			click: () => {
 				contacts.add({FirstName: "New", LastName: "User", StatusID: 1});
