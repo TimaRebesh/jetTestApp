@@ -199,7 +199,6 @@ export default class ContactsForm extends JetView {
 								const contactForm = this.$$("contactUserForm");
 								if (contactForm.validate()) {
 									this.addNewContact();
-									this.closeForm();
 								}
 							}
 
@@ -252,7 +251,6 @@ export default class ContactsForm extends JetView {
 	addNewContact() {
 		const values = this.$$("contactUserForm").getValues();
 		const id = values.id;
-		this.newID = contacts.getLastId();
 		contacts.waitSave(() => {
 			if (id) {
 				contacts.updateItem(id, values);
@@ -260,13 +258,15 @@ export default class ContactsForm extends JetView {
 			else {
 				contacts.add(values);
 			}
+		}).then((obj) => {
+			this.closeForm(obj.id);
 		});
 	}
 
 
-	closeForm() {
-		const id = this.getParam("id", true);
-		this.app.callEvent("contact:switch", [id]);
+	closeForm(id) {
+		let param = id || this.getParam("id", true);
+		this.app.callEvent("contact:switch", [param]);
 		this.form = "";
 	}
 }

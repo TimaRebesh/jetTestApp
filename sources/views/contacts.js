@@ -22,7 +22,6 @@ export default class ContactsView extends JetView {
 			},
 			on: {
 				onAfterSelect: (id) => {
-					this.setParam("id", id, true);
 					this.app.callEvent("contact:switch", [id]);
 				}
 			}
@@ -62,20 +61,13 @@ export default class ContactsView extends JetView {
 			const Contactslist = this.$$("Contactslist");
 			Contactslist.sync(contacts);
 
-			let id = this.getParam("id", true);
-			if (!id || !contacts.exists(id)) { id = contacts.getFirstId(); }
-			if (id && id !== Contactslist.getSelectedId()) { Contactslist.select(id); }
-
 			this.show("contactsElements.contactsProfile");
 
 			// eslint-disable-next-line no-shadow
 			this.on(this.app, "contact:switch", (id, mode, check) => {
 				this.$$("Contactslist").enable();
 				if (mode === "Add" && check) {
-					this.contactList.select(this.contactList.getFirstId());
-				}
-				else if (mode) {
-					this.contactList.select(id);
+					id = this.contactList.getFirstId();
 				}
 				this.show(`/top/contacts?id=${id}/contactsElements.contactsProfile`);
 			});
@@ -85,6 +77,15 @@ export default class ContactsView extends JetView {
 					this.setParam("mode", mode);
 				});
 			});
+		});
+	}
+
+	urlChange() {
+		const Contactslist = this.$$("Contactslist");
+		contacts.waitData.then(() => {
+			let id = this.getParam("id", true);
+			if (!id || !contacts.exists(id)) { id = contacts.getFirstId(); }
+			if (id && id !== Contactslist.getSelectedId()) { Contactslist.select(id); }
 		});
 	}
 }
