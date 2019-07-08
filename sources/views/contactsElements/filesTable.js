@@ -9,7 +9,7 @@ export default class FilesDataTable extends JetView {
 			rows: [
 				{
 					view: "datatable",
-					localId: "datatable",
+					localId: "datatableFiles",
 					select: true,
 					columns: [
 						{
@@ -19,7 +19,7 @@ export default class FilesDataTable extends JetView {
 							sort: "string"
 						},
 						{
-							id: "ChangeDate",
+							id: "changeDate",
 							header: "Change date",
 							fillspace: true,
 							sort: "date",
@@ -33,16 +33,17 @@ export default class FilesDataTable extends JetView {
 							sort: "int"
 						},
 						{
-							id: "",
+							header: "",
+							id: "delete",
 							template: "{common.trashIcon()}",
-							width: 60
+							width: 40
 						}
 
 					],
 					onClick: {
 						"wxi-trash": (e, id) => {
 							webix.confirm({
-								text: "The file will be deleted. Deleting cannot be undone... <br/> Are you sure?"
+								text: "The file will be deleted.<br/> Are you sure?"
 							}).then(() => {
 								if (id) { files.remove(id); }
 							});
@@ -58,7 +59,7 @@ export default class FilesDataTable extends JetView {
 						type: "iconButton",
 						icon: "mdi mdi-upload",
 						label: "Upload file",
-						width: 200,
+						width: 240,
 						on: {
 							onBeforeFileAdd: (file) => {
 								const id = this.getParam("id", true);
@@ -66,15 +67,15 @@ export default class FilesDataTable extends JetView {
 									const values = {
 										name: file.name,
 										size: Math.round(file.size / 1000),
-										ChangeDate: file.file.lastModifiedDate,
-										ContactID: id
+										changeDate: file.file.lastModifiedDate,
+										contactID: id
 									};
 									files.add(values);
 								}
 								return false;
 							},
 							onFileUploadError: () => {
-								webix.alert("Upload failed.");
+								webix.alert("Upload failed");
 							}
 						}
 					},
@@ -85,12 +86,12 @@ export default class FilesDataTable extends JetView {
 		};
 	}
 
-	init(view) {
-		view.queryView("datatable").sync(files);
+	init() {
+		this.$$("datatableFiles").sync(files);
 	}
 
 	urlChange() {
 		const id = this.getParam("id", true);
-		files.data.filter(file => file.ContactID.toString() === id);
+		files.filter(file => file.contactID.toString() === id.toString());
 	}
 }

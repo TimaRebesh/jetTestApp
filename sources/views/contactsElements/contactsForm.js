@@ -2,6 +2,19 @@ import {JetView} from "webix-jet";
 import {contacts} from "../../models/contacts";
 import {statuses} from "../../models/statuses";
 
+webix.protoUI({
+	name: "photpTemplate",
+	$allowsClear: true,
+	getValue() {
+		let value = this.getValues();
+		return value.data;
+	},
+	setValue(value) {
+		this.setValues({data: value});
+	}
+}, webix.ui.template);
+
+const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg";
 
 export default class ContactsForm extends JetView {
 	config() {
@@ -10,14 +23,19 @@ export default class ContactsForm extends JetView {
 			localId: "contactUserForm",
 			id: "contact:form",
 			elementsConfig: {
-				labelWidth: 150
+				labelWidth: 150,
+				margin: 20
 			},
 			rules: {
-				$all: webix.rules.isNotEmpty
+				FirstName: webix.rules.isNotEmpty,
+				LastName: webix.rules.isNotEmpty,
+				StatusID: webix.rules.isNotEmpty,
+				Job: webix.rules.isNotEmpty
 			},
 			elements: [
 				{
-					view: "label",
+					type: "header",
+					localId: "headName",
 					template: obj => obj.value,
 					css: "contact_form_header",
 					height: 40
@@ -30,13 +48,15 @@ export default class ContactsForm extends JetView {
 									view: "text",
 									name: "FirstName",
 									label: "First name",
-									placeholder: "first name"
+									placeholder: "first name",
+									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "LastName",
 									label: "Last name",
-									placeholder: "last name"
+									placeholder: "last name",
+									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "datepicker",
@@ -47,19 +67,22 @@ export default class ContactsForm extends JetView {
 									view: "combo",
 									name: "StatusID",
 									label: "Status",
-									options: statuses
+									options: statuses,
+									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "Job",
 									label: "Job",
-									placeholder: "job"
+									placeholder: "job",
+									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "Company",
 									label: "Company",
-									placeholder: "company"
+									placeholder: "company",
+									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
@@ -106,14 +129,15 @@ export default class ContactsForm extends JetView {
 
 									cols: [
 										{
-											view: "template",
+											view: "photpTemplate",
 											name: "Photo",
 											borderless: true,
-											localId: "photo",
-											id: "photo:contact",
-											template: obj => `
-               							    	 <image class="userphoto2" src="${obj.Photo ? obj.Photo : "http://confirent.ru/sites/all/themes/skeletontheme/images/empty_avatar.jpg"}" />
-                							`
+											localId: "photoPreview",
+											template: (obj) => {
+												let photoStr = obj.data || defaultPhoto;
+												return `<image class="userphoto2" src="${photoStr}" />`;
+											}
+
 										},
 										{
 											rows: [
@@ -126,11 +150,11 @@ export default class ContactsForm extends JetView {
 													multiple: false,
 													on: {
 														onBeforeFileAdd: (upload) => {
-															let file = upload.file;
-															let reader = new FileReader();
+															const file = upload.file;
+															const reader = new FileReader();
 															reader.onload = (event) => {
 																this.photo = event.target.result;
-																webix.$$("photo:contact").setValues({Photo: this.photo});
+																this.$$("photoPreview").setValue(this.photo);
 															};
 															reader.readAsDataURL(file);
 															return false;
@@ -139,8 +163,13 @@ export default class ContactsForm extends JetView {
 												},
 												{
 													view: "button",
-													value: "Delete photo"
-												}
+													value: "Delete photo",
+													click: () => {
+														this.photo = "";
+														this.$$("photoPreview").setValues(defaultPhoto);
+													}
+												},
+												{gravity: 0.3}
 											]
 										}
 									]
@@ -167,8 +196,11 @@ export default class ContactsForm extends JetView {
 							value: "Add",
 							id: "save:contactform",
 							click: () => {
-								this.addNewContact();
-								this.closeForm();
+								const contactForm = this.$$("contactUserForm");
+								if (contactForm.validate()) {
+									this.addNewContact();
+									this.closeForm();
+								}
 							}
 
 						}
@@ -199,30 +231,42 @@ export default class ContactsForm extends JetView {
 		]).then(() => {
 			const values = contacts.getItem(id);
 			if (values) { form.setValues(values, true); }
+
+			const mode = this.getParam("mode", true);
+
+			if (mode) {
+				this.$$("headName").setValues({value: `${mode} contact`});
+
+				if (mode === "Add") {
+					this.$$("photoPreview").setValues({Photo: defaultPhoto});
+					this.$$("contactUserForm").setValues({});
+					this.$$("save:contactform").setValue(mode);
+				}
+				if (mode === "Edit") {
+					this.$$("save:contactform").setValue(mode);
+				}
+			}
 		});
 	}
 
 	addNewContact() {
-		this.contactList = webix.$$("contacts:list");
-		const values = this.form.getValues();
+		const values = this.$$("contactUserForm").getValues();
 		const id = values.id;
 		this.newID = contacts.getLastId();
-		if (contacts.exists(id)) {
-			values.Photo = this.photo;
-			contacts.updateItem(id, values);
-			this.contactsList.select(id);
-		}
-		else {
-			contacts.add(values);
-			values.Photo = this.photo;
-			this.contactList.select(contacts.getLastId());
-		}
+		contacts.waitSave(() => {
+			if (id) {
+				contacts.updateItem(id, values);
+			}
+			else {
+				contacts.add(values);
+			}
+		});
 	}
 
 
 	closeForm() {
 		const id = this.getParam("id", true);
-		this.app.callEvent("contact:return", [id]);
+		this.app.callEvent("contact:switch", [id]);
 		this.form = "";
 	}
 }

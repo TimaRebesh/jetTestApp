@@ -23,8 +23,8 @@ export default class ContactTable extends JetView {
 							align: "right",
 							inputWidth: 200,
 							click: () => {
-								const value = this.$$("addActivButton").getValue();
-								this.app.callEvent("show:editWindow", [null]);
+								let id = this.getParam("id", true);
+								this.app.callEvent("show:activitiesForm", [null, id]);
 							}
 						}
 					]

@@ -33,7 +33,7 @@ export default class DataView extends JetView {
 							label: "Add activity",
 							autowidth: true,
 							click: () => {
-								this.app.callEvent("show:editWindow", [null]);
+								this.app.callEvent("show:activitiesForm", [null]);
 							}
 
 						}]

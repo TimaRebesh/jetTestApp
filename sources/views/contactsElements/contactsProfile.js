@@ -12,7 +12,12 @@ export default class ContactsProfile extends JetView {
 			view: "toolbar",
 			borderless: true,
 			elements: [
-				{template: obj => `${obj.FirstName || " "} ${obj.LastName || " "}`, localId: "headName", width: 200, height: 50, borderless: true, css: "toolbarname"},
+				{template: obj => `${obj.FirstName || " "} ${obj.LastName || " "}`,
+					localId: "headName",
+					height: 50,
+					borderless: true,
+					css: "toolbarname"
+				},
 				{},
 				{
 					view: "button",
@@ -32,7 +37,7 @@ export default class ContactsProfile extends JetView {
 					icon: "mdi mdi-file-document-edit",
 					width: 100,
 					click: () => {
-						this.getParentView().showForm({}, "Edit", "Save");
+						this.app.callEvent("contactform:show", ["Edit"]);
 					}
 				}
 			]};
@@ -65,27 +70,24 @@ export default class ContactsProfile extends JetView {
 			]
 		};
 
-		const contactTabbar = {
-			view: "tabbar",
-			multiview: true,
-			localID: "contactTabbar",
-			options: [
+		const contactsActFiles = {
+			rows: [
 				{
-					value: "Activities",
-					id: "contact:activities"
+					view: "tabbar",
+					multiview: true,
+					localID: "contactTabbar",
+					options: [
+						{value: "Activities", id: "contact:activities"},
+						{value: "Files", id: "contact:files"}
+					],
+					height: 40
 				},
 				{
-					value: "Files",
-					id: "contact:files"
+					cells: [
+						{id: "contact:activities", $subview: ContactTable},
+						{id: "contact:files", $subview: FilesDataTable}
+					]
 				}
-			],
-			height: 40
-		};
-
-		const contactTabbarElements = {
-			cells: [
-				ContactTable,
-				FilesDataTable
 			]
 		};
 
@@ -93,8 +95,7 @@ export default class ContactsProfile extends JetView {
 			rows: [
 				topbar,
 				userInfo,
-				contactTabbar,
-				contactTabbarElements
+				contactsActFiles
 			]
 		};
 		return ui;
@@ -113,6 +114,7 @@ export default class ContactsProfile extends JetView {
 		]).then(() => {
 			const id = this.getParam("id", true);
 			const item = contacts.getItem(id);
+
 			if (item) {
 				let values = webix.copy(item);
 				values.statusString = statuses.getItem(values.StatusID).Value;

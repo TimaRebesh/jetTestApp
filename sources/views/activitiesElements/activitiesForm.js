@@ -41,7 +41,7 @@ export default class ActivityForm extends JetView {
 						view: "combo",
 						name: "ContactID",
 						label: "Contact",
-						localId: "ContactCombo",
+						localId: "contactCombo",
 						id: "ContactComboAct",
 						options: contacts,
 						invalidMessage: "Please select a contact"
@@ -90,7 +90,6 @@ export default class ActivityForm extends JetView {
 										activity.add(value);
 									}
 									this.$$("myWindow").hide();
-									this.setEnable();
 								}
 							}
 						},
@@ -99,7 +98,6 @@ export default class ActivityForm extends JetView {
 							value: "Cancel",
 							click: () => {
 								this.hideForm();
-								this.setEnable();
 							}
 						}
 					]},
@@ -115,20 +113,22 @@ export default class ActivityForm extends JetView {
 	init(view) {
 		this.form = view.getBody();
 
-		this.on(this.app, "show:editWindow", (data) => {
+		this.on(this.app, "show:activitiesForm", (data, id) => {
 			let mode = data ? "Edit" : "Add";
 			this.$$("changeValue").setValues(mode);
 			this.$$("activityButton").setValue(mode);
 			if (data) this.form.setValues(data);
 			this.getRoot().show();
-		});
-	}
 
-	setEnable() {
-		const ContactCombo = webix.$$("ContactComboAct");
-		if (!ContactCombo.isEnabled()) {
-			ContactCombo.enable();
-		}
+			const pages = this.getUrl();
+			pages.forEach((page) => {
+				if (page.page === "contactsElements.contactsProfile") {
+					const contactCombo = this.$$("contactCombo");
+					if (id) contactCombo.setValue(id);
+					contactCombo.disable();
+				}
+			});
+		});
 	}
 
 	hideForm() {

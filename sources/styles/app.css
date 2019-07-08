@@ -64,6 +64,7 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    object-fit: cover; 
 }
 
 .userinfo {
@@ -74,6 +75,11 @@
     display: block;
     margin-left: 12px;
 }
+.status {
+    font-weight: bold;  
+    font-size: 16px;
+}
+
 .userjob {
     font-size: 12px;
     display: block;
@@ -88,6 +94,7 @@
 .bigphoto {
     width: 200px;
     height: 200px;
+    object-fit: cover; 
 }
 .userinfo_2 {
     margin-left: 40px;
@@ -104,18 +111,21 @@
     justify-content: flex-start;
 }
 .toolbarname {
-    font-size: 20px;
-    padding-top: 10px;
+    font-size: 30px;
+    padding-bottom: 10px;
+    font-weight: bold;  
 }
 .activities_form_header {
     text-align: center;
 }
 .userphoto2 {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     padding: 0px;
     margin: 5px;
+    object-fit: cover; 
 }
 .contact_form_header {
     font-size: 26px;
+    border: none;
 }

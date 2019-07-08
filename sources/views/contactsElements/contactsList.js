@@ -63,6 +63,7 @@ export default class ContactsView extends JetView {
 
 	init() {
 		this.$$("Contactslist").sync(contacts);
+		this.show("contactsElements.contactsProfile");
 
 		this.on(this.app, "contact:return", () => {
 			this.$$("Contactslist").enable();
