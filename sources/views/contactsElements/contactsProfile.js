@@ -135,9 +135,7 @@ export default class ContactsProfile extends JetView {
 				text: "The contact will be deleted.<br/> Are you sure?"
 			}).then(() => {
 				contacts.remove(id);
-				this.app.callEvent("contactform:show", ["Add"]);
-				// let firstId = contacts.getFirstId();
-				// this.getRoot().getParentView().queryView("list").select(firstId);
+				this.app.callEvent("contact:switch");
 				const connectedActivities = activity.find(obj => obj.ContactID.toString() === id);
 				connectedActivities.forEach((act) => {
 					activity.remove(act.id);
