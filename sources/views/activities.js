@@ -5,6 +5,8 @@ import ActivityForm from "./activitiesElements/activitiesForm";
 
 export default class DataView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
 				{
@@ -15,14 +17,19 @@ export default class DataView extends JetView {
 							autodidth: true,
 							options:
 								[
-									{id: 1, value: "All"},
-									{id: 2, value: "Overdue"},
-									{id: 3, value: "Completed"},
-									{id: 4, value: "Today"},
-									{id: 5, value: "Tomorrow"},
-									{id: 6, value: "This week"},
-									{id: 7, value: "This month"}
-								]
+									{id: "1", value: _("All")},
+									{id: "2", value: _("Overdue")},
+									{id: "3", value: _("Completed")},
+									{id: "4", value: _("Today")},
+									{id: "5", value: _("Tomorrow")},
+									{id: "6", value: _("This week")},
+									{id: "7", value: _("This month")}
+								],
+							on: {
+								onChange: () => {
+									webix.$$("activitiesDataTable").filterByAll();
+								}
+							}
 						},
 						{
 
@@ -59,4 +66,15 @@ export default class DataView extends JetView {
 			activity.data.filter();
 		});
 	}
+
+	// filterOfActivities(view) {
+	// 	view.registerFilter(
+	// 		this.$$("tabbar"), {
+	// 			columnId: "State",
+	// 			compare: (value, filter, item)	=> {
+	// 				const today = new Date();
+	// 			}
+	// 		}
+	// 	);
+	// }
 }

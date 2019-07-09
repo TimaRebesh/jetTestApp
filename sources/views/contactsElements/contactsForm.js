@@ -3,7 +3,7 @@ import {contacts} from "../../models/contacts";
 import {statuses} from "../../models/statuses";
 
 webix.protoUI({
-	name: "photpTemplate",
+	name: "photoTemplate",
 	$allowsClear: true,
 	getValue() {
 		let value = this.getValues();
@@ -129,7 +129,7 @@ export default class ContactsForm extends JetView {
 
 									cols: [
 										{
-											view: "photpTemplate",
+											view: "photoTemplate",
 											name: "Photo",
 											borderless: true,
 											localId: "photoPreview",
@@ -165,7 +165,6 @@ export default class ContactsForm extends JetView {
 													view: "button",
 													value: "Delete photo",
 													click: () => {
-														this.photo = "";
 														this.$$("photoPreview").setValues(defaultPhoto);
 													}
 												},
@@ -210,12 +209,11 @@ export default class ContactsForm extends JetView {
 	}
 
 	init() {
-		this.contactList = webix.$$("contacts:list");
 		this.form = this.$$("contactUserForm");
-		const id = this.getParam("id", true);
+		const contactId = this.getParam("id", true);
 		contacts.waitData.then(() => {
-			if (id && contacts.exists(id)) {
-				const photo = contacts.getItem(id).Photo;
+			if (contactId && contacts.exists(contactId)) {
+				const photo = contacts.getItem(contactId).Photo;
 				this.photo = photo;
 			}
 		});
@@ -237,7 +235,6 @@ export default class ContactsForm extends JetView {
 				this.$$("headName").setValues({value: `${mode} contact`});
 
 				if (mode === "Add") {
-					this.$$("photoPreview").setValues({Photo: defaultPhoto});
 					this.$$("contactUserForm").setValues({});
 					this.$$("save:contactform").setValue(mode);
 				}

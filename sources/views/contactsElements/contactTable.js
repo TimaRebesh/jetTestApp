@@ -34,7 +34,7 @@ export default class ContactTable extends JetView {
 	}
 
 	init() {
-		this.form = this.ui(ActivityForm);
+		this.windowForm = this.ui(ActivityForm);
 
 		this.on(this.app, "activity:save", (values) => {
 			if (values.id) {

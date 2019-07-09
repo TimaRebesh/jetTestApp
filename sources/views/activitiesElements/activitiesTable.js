@@ -9,6 +9,7 @@ export default class ActivitiesDataTable extends JetView {
 		return {
 			view: "datatable",
 			localId: "activities",
+			id: "activitiesDataTable",
 			hover: "hoverLine",
 			autoConfig: true,
 			scrollX: false,
