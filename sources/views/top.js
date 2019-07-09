@@ -3,10 +3,12 @@ import {menuData} from "../models/menuData";
 
 export default class TopView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		let header = {
 			type: "header",
 			id: "headerId",
-			template: obj => obj.value,
+			template: obj => _(obj.value),
 			css: "app_header"
 		};
 
@@ -17,7 +19,7 @@ export default class TopView extends JetView {
 			width: 180,
 			layout: "y",
 			select: true,
-			template: "<span class='webix_icon #icon#'></span> #value# ",
+			template: obj => `<span class='webix_icon ${obj.icon}'></span> ${_(obj.value)}`,
 			data: menuData,
 			on: {
 				onAfterSelect: (id) => {
@@ -28,7 +30,6 @@ export default class TopView extends JetView {
 		};
 
 		let ui = {
-			type: "clean",
 			paddingX: 5,
 			css: "app_layout",
 			rows: [

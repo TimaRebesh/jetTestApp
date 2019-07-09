@@ -9,6 +9,7 @@ export default class ActivitiesDataTable extends JetView {
 		return {
 			view: "datatable",
 			localId: "activities",
+			id: "activitiesDataTable",
 			hover: "hoverLine",
 			autoConfig: true,
 			scrollX: false,
@@ -61,11 +62,6 @@ export default class ActivitiesDataTable extends JetView {
 					width: 40
 				}
 			],
-			on: {
-				onAfterSelect: (id) => {
-					this.show(`../activities?id=${id}`);
-				}
-			},
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
@@ -78,7 +74,7 @@ export default class ActivitiesDataTable extends JetView {
 				},
 				"wxi-pencil": (e, id) => {
 					const item = this.getRoot().getItem(id);
-					this.app.callEvent("show:editWindow", [item]);
+					this.app.callEvent("show:activitiesForm", [item]);
 				}
 			}
 		};
@@ -92,7 +88,7 @@ export default class ActivitiesDataTable extends JetView {
 			statuses.waitData
 		]).then(
 			() => {
-				this.$$("activities").parse(activity);
+				this.$$("activities").sync(activity);
 			}
 		);
 	}

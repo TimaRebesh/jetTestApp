@@ -38,9 +38,11 @@ export default class ActivityForm extends JetView {
 						invalidMessage: "Please select a type"
 					},
 					{
-						view: "richselect",
+						view: "combo",
 						name: "ContactID",
 						label: "Contact",
+						localId: "contactCombo",
+						id: "ContactComboAct",
 						options: contacts,
 						invalidMessage: "Please select a contact"
 					},
@@ -111,12 +113,21 @@ export default class ActivityForm extends JetView {
 	init(view) {
 		this.form = view.getBody();
 
-		this.on(this.app, "show:editWindow", (data) => {
+		this.on(this.app, "show:activitiesForm", (data, id) => {
 			let mode = data ? "Edit" : "Add";
 			this.$$("changeValue").setValues(mode);
 			this.$$("activityButton").setValue(mode);
 			if (data) this.form.setValues(data);
 			this.getRoot().show();
+
+			const pages = this.getUrl();
+			pages.forEach((page) => {
+				if (page.page === "contactsElements.contactsProfile") {
+					const contactCombo = this.$$("contactCombo");
+					if (id) contactCombo.setValue(id);
+					contactCombo.disable();
+				}
+			});
 		});
 	}
 
