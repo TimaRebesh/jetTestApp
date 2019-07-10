@@ -67,8 +67,8 @@ export default class ActivityForm extends JetView {
 					},
 					{
 						view: "checkbox",
-						checkValue: "open",
-						uncheckValue: "close",
+						checkValue: "Close",
+						uncheckValue: "Open",
 						name: "State",
 						labelRight: "Completed"
 					},

@@ -1,13 +1,14 @@
 import {JetView} from "webix-jet";
+import {icons} from "../models/iconsData";
 
 export default class SettingsTable extends JetView {
-	constructor(app, name, data, localId, valHeader, valIcon, label, value) {
+	constructor(app, name, data, localId, headerName, valueIcon, label, value) {
 		super(app, name);
 		this._tdata = data;
-		this.localId = localId;
-		this.valHeader = valHeader;
-		this.valIcon = valIcon;
 		this.label = label;
+		this.localId = localId;
+		this.headerName = headerName;
+		this.valueIcon = valueIcon;
 		this.value = value;
 	}
 
@@ -15,9 +16,8 @@ export default class SettingsTable extends JetView {
 		const label = {
 			view: "label",
 			label: this.label,
-			align: "center",
 			localId: "label",
-			css: "settings_label"
+			css: "labelForSetTabl"
 		};
 
 		const table = {
@@ -29,26 +29,27 @@ export default class SettingsTable extends JetView {
 			columns: [
 				{
 					id: "Value",
-					header: this.valHeader,
+					header: this.headerName,
 					fillspace: true,
 					editor: "text"
 				},
 				{
 					id: "Icon",
-					header: this.valIcon,
+					header: this.valueIcon,
 					width: 150,
-					editor: "text"
+					editor: "select",
+					collection: icons
 				},
 				{
 					id: "",
 					template: "{common.trashIcon()}",
-					width: 60
+					width: 40
 				}
 			],
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
-						// text: `${_("Are you sure you want to delete the ")} ${_(this.valHeader)}`,
+						text: "Are you sure you want to delete this?",
 						ok: "OK",
 						cancel: "Cancel"
 					}).then(() => {
@@ -58,8 +59,9 @@ export default class SettingsTable extends JetView {
 				}
 			}
 		};
-		const button = {
+		const bottom = {
 			view: "toolbar",
+			css: "bottomSetTabl",
 			padding: 0,
 			elements: [
 				{},
@@ -67,15 +69,14 @@ export default class SettingsTable extends JetView {
 					view: "button",
 					label: this.label,
 					type: "icon",
-					icon: "wxi-plus",
+					icon: "wxi-plus-square",
 					css: "webix_primary",
-					width: 300,
+					width: 150,
 					align: "center",
 					click: () => {
 						this._tdata.add({Value: this.value, Icon: "icon"});
 					}
-				},
-				{}
+				}
 			]
 		};
 		return {
@@ -84,7 +85,7 @@ export default class SettingsTable extends JetView {
 				table,
 				{
 					cols: [
-						button
+						bottom
 					]
 				}
 			]

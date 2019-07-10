@@ -19,8 +19,8 @@ export default class ActivitiesDataTable extends JetView {
 					header: "",
 					id: "State",
 					template: "{common.checkbox()}",
-					checkValue: "open",
-					uncheckValue: "close",
+					checkValue: "Close",
+					uncheckValue: "Open",
 					width: 50
 				},
 				{

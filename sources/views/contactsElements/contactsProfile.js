@@ -8,6 +8,8 @@ import FilesDataTable from "./filesTable";
 
 export default class ContactsProfile extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const topbar = {
 			view: "toolbar",
 			borderless: true,
@@ -21,10 +23,10 @@ export default class ContactsProfile extends JetView {
 				{},
 				{
 					view: "button",
-					label: "Delete",
+					label: _("Delete"),
 					type: "icon",
 					icon: "wxi-trash",
-					width: 100,
+					width: 150,
 					click: () => {
 						this.deleteOfContact();
 					}
@@ -32,10 +34,10 @@ export default class ContactsProfile extends JetView {
 				},
 				{
 					view: "button",
-					label: "Edit",
+					label: _("Edit"),
 					type: "icon",
 					icon: "mdi mdi-file-document-edit",
-					width: 100,
+					width: 150,
 					click: () => {
 						this.app.callEvent("contactform:show", ["Edit"]);
 					}
@@ -136,8 +138,6 @@ export default class ContactsProfile extends JetView {
 			}).then(() => {
 				contacts.remove(id);
 				this.app.callEvent("contactform:show", ["Add"]);
-				// let firstId = contacts.getFirstId();
-				// this.getRoot().getParentView().queryView("list").select(firstId);
 				const connectedActivities = activity.find(obj => obj.ContactID.toString() === id);
 				connectedActivities.forEach((act) => {
 					activity.remove(act.id);
