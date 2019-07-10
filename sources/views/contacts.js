@@ -14,10 +14,9 @@ export default class ContactsView extends JetView {
 					let value = this.$$("inputFilter").getValue().toLowerCase();
 					this.$$("Contactslist").filter((obj) => {
 						let fullName = [obj.FirstName, obj.LastName].join(" ");
-						let lastName = obj.LastName.toLowerCase().indexOf(value);
-						let company = obj.Company.toLowerCase().indexOf(value);
-						fullName = fullName.toString().toLowerCase().indexOf(value);
-						return fullName !== -1 || lastName !== -1 || company !== -1;
+						let name = fullName.toLowerCase().indexOf(value);
+						let job = obj.Job.toLowerCase().indexOf(value);
+						return name !== -1 || job !== -1;
 					});
 				}
 			}
