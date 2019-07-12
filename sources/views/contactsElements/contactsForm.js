@@ -18,6 +18,8 @@ const defaultPhoto = "http://confirent.ru/sites/all/themes/skeletontheme/images/
 
 export default class ContactsForm extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "form",
 			localId: "contactUserForm",
@@ -47,53 +49,53 @@ export default class ContactsForm extends JetView {
 								{
 									view: "text",
 									name: "FirstName",
-									label: "First name",
+									label: _("First name"),
 									placeholder: "first name",
 									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "LastName",
-									label: "Last name",
+									label: _("Last name"),
 									placeholder: "last name",
 									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "datepicker",
 									name: "StartDate",
-									label: "Joining date"
+									label: _("Joining date")
 								},
 								{
 									view: "combo",
 									name: "StatusID",
-									label: "Status",
+									label: _("Status"),
 									options: statuses,
 									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "Job",
-									label: "Job",
+									label: _("Job"),
 									placeholder: "job",
 									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
 									name: "Company",
-									label: "Company",
+									label: _("Company"),
 									placeholder: "company",
 									invalidMessage: "fill in the field please"
 								},
 								{
 									view: "text",
-									name: "Webside",
-									label: "Webside",
+									name: "Website",
+									label: _("Website"),
 									placeholder: "some website"
 								},
 								{
 									view: "text",
 									name: "Address",
-									label: "Address",
+									label: _("Address"),
 									placeholder: "address"
 								}
 							]
@@ -104,25 +106,25 @@ export default class ContactsForm extends JetView {
 								{
 									view: "text",
 									name: "Email",
-									label: "Email",
+									label: _("Email"),
 									placeholder: "email"
 								},
 								{
 									view: "text",
 									name: "Skype",
-									label: "Skype",
+									label: _("Skype"),
 									placeholder: "some Skype"
 								},
 								{
 									view: "text",
 									name: "Phone",
-									label: "Phone",
+									label: _("Phone"),
 									placeholder: "phone number"
 								},
 								{
 									view: "datepicker",
 									name: "Birthday",
-									label: "Birthday",
+									label: _("Birthday"),
 									invalidMessage: "Please select a date"
 								},
 								{
@@ -144,7 +146,7 @@ export default class ContactsForm extends JetView {
 												{},
 												{
 													view: "uploader",
-													value: "Change photo",
+													value: _("Change photo"),
 													accept: "image/jpeg, image/png",
 													autosend: false,
 													multiple: false,
@@ -163,7 +165,7 @@ export default class ContactsForm extends JetView {
 												},
 												{
 													view: "button",
-													value: "Delete photo",
+													value: _("Delete photo"),
 													click: () => {
 														this.$$("photoPreview").setValues(defaultPhoto);
 													}
@@ -184,7 +186,7 @@ export default class ContactsForm extends JetView {
 						{
 							view: "button",
 							type: "form",
-							value: "Cancel",
+							value: _("Cancel"),
 							click: () => {
 								this.closeForm();
 							}
@@ -192,7 +194,7 @@ export default class ContactsForm extends JetView {
 						{
 							view: "button",
 							type: "form",
-							value: "Add",
+							value: _("Add"),
 							id: "save:contactform",
 							click: () => {
 								const contactForm = this.$$("contactUserForm");
@@ -220,6 +222,8 @@ export default class ContactsForm extends JetView {
 	}
 
 	urlChange() {
+		const _ = this.app.getService("locale")._;
+
 		let form = this.$$("contactUserForm");
 		const id = this.getParam("id", true);
 		webix.promise.all([
@@ -232,13 +236,13 @@ export default class ContactsForm extends JetView {
 			const mode = this.getParam("mode", true);
 
 			if (mode) {
-				this.$$("headName").setValues({value: `${mode} contact`});
+				this.$$("headName").setValues({value: `${mode} ${_("contact")}`});
 
-				if (mode === "Add") {
+				if (mode === _("Add")) {
 					this.$$("contactUserForm").setValues({});
 					this.$$("save:contactform").setValue(mode);
 				}
-				if (mode === "Edit") {
+				if (mode === _("Edit")) {
 					this.$$("save:contactform").setValue(mode);
 				}
 			}

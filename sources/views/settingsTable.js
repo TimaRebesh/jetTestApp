@@ -13,9 +13,11 @@ export default class SettingsTable extends JetView {
 	}
 
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const label = {
 			view: "label",
-			label: this.label,
+			label: _(this.label),
 			localId: "label",
 			css: "labelForSetTabl"
 		};
@@ -29,13 +31,13 @@ export default class SettingsTable extends JetView {
 			columns: [
 				{
 					id: "Value",
-					header: this.headerName,
+					header: _(this.headerName),
 					fillspace: true,
 					editor: "text"
 				},
 				{
 					id: "Icon",
-					header: this.valueIcon,
+					header: _(this.valueIcon),
 					width: 150,
 					editor: "select",
 					collection: icons
@@ -49,9 +51,9 @@ export default class SettingsTable extends JetView {
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
-						text: "Are you sure you want to delete this?",
-						ok: "OK",
-						cancel: "Cancel"
+						text: _("Are you sure you want to delete this?"),
+						ok: _("OK"),
+						cancel: _("Cancel")
 					}).then(() => {
 						this._tdata.remove(id);
 					});
@@ -67,14 +69,14 @@ export default class SettingsTable extends JetView {
 				{},
 				{
 					view: "button",
-					label: this.label,
+					label: _(this.label),
 					type: "icon",
 					icon: "wxi-plus-square",
 					css: "webix_primary",
 					width: 150,
 					align: "center",
 					click: () => {
-						this._tdata.add({Value: this.value, Icon: "icon"});
+						this._tdata.add({Value: _(this.value), Icon: "icon"});
 					}
 				}
 			]

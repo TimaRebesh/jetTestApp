@@ -6,8 +6,8 @@ import SettingsTable from "./settingsTable";
 
 export default class SettingsView extends JetView {
 	config() {
-		// const _ = this.app.getService("locale")._;
 		const lang = this.app.getService("locale").getLang();
+		const _ = this.app.getService("locale")._;
 
 		const segmented = {
 			view: "segmented",
@@ -15,8 +15,8 @@ export default class SettingsView extends JetView {
 			id: "SegmentedLanguage",
 			inputWidth: 300,
 			options: [
-				{id: "en", value: "EN"},
-				{id: "ru", value: "RU"}
+				{id: "en", value: _("EN")},
+				{id: "ru", value: _("RU")}
 			],
 			click: () => this.toggleLanguage()
 		};

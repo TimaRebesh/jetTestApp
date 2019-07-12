@@ -38,7 +38,7 @@ export default class DataView extends JetView {
 							type: "icon",
 							icon: "wxi-plus-square",
 							css: "webix_primary",
-							label: "Add activity",
+							label: _("Add activity"),
 							autowidth: true,
 							click: () => {
 								this.app.callEvent("show:activitiesForm", [null]);

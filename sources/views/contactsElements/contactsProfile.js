@@ -39,7 +39,7 @@ export default class ContactsProfile extends JetView {
 					icon: "mdi mdi-file-document-edit",
 					width: 150,
 					click: () => {
-						this.app.callEvent("contactform:show", ["Edit"]);
+						this.app.callEvent("contactform:show", [_("Edit")]);
 					}
 				}
 			]};
@@ -79,8 +79,8 @@ export default class ContactsProfile extends JetView {
 					multiview: true,
 					localID: "contactTabbar",
 					options: [
-						{value: "Activities", id: "contact:activities"},
-						{value: "Files", id: "contact:files"}
+						{value: _("Activities"), id: "contact:activities"},
+						{value: _("Files"), id: "contact:files"}
 					],
 					height: 40
 				},
@@ -131,10 +131,14 @@ export default class ContactsProfile extends JetView {
 	}
 
 	deleteOfContact() {
+		const _ = this.app.getService("locale")._;
+
 		const id = this.getParam("id", true);
 		if (id && contacts.exists(id)) {
 			webix.confirm({
-				text: "The contact will be deleted.<br/> Are you sure?"
+				text: _("The contact will be deleted.<br/> Are you sure?"),
+				ok: _("OK"),
+				cancel: _("Cancel")
 			}).then(() => {
 				contacts.remove(id);
 				this.app.callEvent("contact:switch");

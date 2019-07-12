@@ -6,6 +6,8 @@ import {activity} from "../../models/activity";
 
 export default class ActivityForm extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "window",
 			localId: "myWindow",
@@ -20,27 +22,27 @@ export default class ActivityForm extends JetView {
 					{
 						view: "template",
 						id: "changeValue",
-						template: editType => `${editType} activity`,
+						template: editType => `${editType} ${_("activity")}`,
 						type: "header",
 						css: "activities_form_header"
 					},
 					{
 						view: "textarea",
 						name: "Details",
-						label: "Details",
+						label: _("Details"),
 						invalidMessage: "Please entry your name"
 					},
 					{
 						view: "combo",
 						name: "TypeID",
-						label: "Type",
+						label: _("Type"),
 						options: activitytypes,
 						invalidMessage: "Please select a type"
 					},
 					{
 						view: "combo",
 						name: "ContactID",
-						label: "Contact",
+						label: _("Contact"),
 						localId: "contactCombo",
 						id: "ContactComboAct",
 						options: contacts,
@@ -51,7 +53,7 @@ export default class ActivityForm extends JetView {
 							{
 								view: "datepicker",
 								name: "NewDate",
-								label: "Date",
+								label: _("Date"),
 								invalidMessage: "Please select a date"
 							},
 							{
@@ -60,7 +62,7 @@ export default class ActivityForm extends JetView {
 								format: "%H:%i",
 								type: "time",
 								name: "NewTime",
-								label: "Time",
+								label: _("Time"),
 								invalidMessage: "Please select any time"
 							}
 						]
@@ -70,7 +72,7 @@ export default class ActivityForm extends JetView {
 						checkValue: "Close",
 						uncheckValue: "Open",
 						name: "State",
-						labelRight: "Completed"
+						labelRight: _("Completed")
 					},
 					{cols: [
 						{gravity: 2},
@@ -95,7 +97,7 @@ export default class ActivityForm extends JetView {
 						},
 						{
 							view: "button",
-							value: "Cancel",
+							value: _("Cancel"),
 							click: () => {
 								this.hideForm();
 							}
@@ -111,12 +113,13 @@ export default class ActivityForm extends JetView {
 	}
 
 	init(view) {
+		const _ = this.app.getService("locale")._;
 		this.form = view.getBody();
 
 		this.on(this.app, "show:activitiesForm", (data, id) => {
-			let mode = data ? "Edit" : "Add";
-			this.$$("changeValue").setValues(mode);
-			this.$$("activityButton").setValue(mode);
+			let mode = data ? `${_("Edit")}` : `${_("Add")}`;
+			this.$$("changeValue").setValues(`${_(mode)}`);
+			this.$$("activityButton").setValue(`${_(mode)}`);
 			if (data) this.form.setValues(data);
 			this.getRoot().show();
 

@@ -6,6 +6,8 @@ import {statuses} from "../../models/statuses";
 
 export default class ActivitiesDataTable extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			view: "datatable",
 			localId: "activities",
@@ -24,7 +26,7 @@ export default class ActivitiesDataTable extends JetView {
 					width: 50
 				},
 				{
-					header: ["Activity type", {content: "selectFilter"}],
+					header: [_("Activity type"), {content: "selectFilter"}],
 					id: "TypeID",
 					editor: "select",
 					options: activitytypes,
@@ -32,20 +34,20 @@ export default class ActivitiesDataTable extends JetView {
 					width: 300
 				},
 				{
-					header: ["Due date", {content: "datepickerFilter", inputConfig: {format: webix.i18n.longDateFormatStr}}],
+					header: [_("Due date"), {content: "datepickerFilter", inputConfig: {format: webix.i18n.longDateFormatStr}}],
 					id: "NewDate",
 					format: webix.i18n.longDateFormatStr,
 					sort: "date",
 					width: 200
 				},
 				{
-					header: ["Details", {content: "textFilter"}],
+					header: [_("Details"), {content: "textFilter"}],
 					id: "Details",
 					fillspace: true,
 					sort: "string"
 				},
 				{
-					header: ["Contact", {content: "selectFilter"}],
+					header: [_("Contact"), {content: "selectFilter"}],
 					id: "ContactID",
 					sort: "string",
 					options: contacts,
@@ -65,7 +67,9 @@ export default class ActivitiesDataTable extends JetView {
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
-						text: "Are you sure?",
+						text: _("Are you sure?"),
+						ok: _("OK"),
+						cancel: _("Cancel"),
 						callback: (result) => {
 							if (result) activity.remove(id);
 						}

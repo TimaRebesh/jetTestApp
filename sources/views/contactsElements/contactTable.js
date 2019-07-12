@@ -5,6 +5,8 @@ import ActivityForm from "../activitiesElements/activitiesForm";
 
 export default class ContactTable extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		return {
 			rows: [
 				{$subview: ActivitiesDataTable},
@@ -14,7 +16,7 @@ export default class ContactTable extends JetView {
 						{},
 						{
 							view: "button",
-							label: "Add activity",
+							label: _("Add activity"),
 							localId: "addActivButton",
 							type: "icon",
 							value: "Add",

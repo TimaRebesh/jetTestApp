@@ -4,11 +4,13 @@ import {contacts} from "../models/contacts";
 
 export default class ContactsView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const contactsFilter = {
 			view: "text",
 			localId: "inputFilter",
 			height: 50,
-			placeholder: "type to find matching contact",
+			placeholder: _("type to find matching contact"),
 			on: {
 				onTimedKeyPress: () => {
 					let value = this.$$("inputFilter").getValue().toLowerCase();
@@ -47,7 +49,7 @@ export default class ContactsView extends JetView {
 
 		const buttonList = {
 			view: "button",
-			label: "Add contact",
+			label: _("Add contact"),
 			localId: "buttonAddList",
 			type: "icon",
 			icon: "wxi-plus",
@@ -57,7 +59,7 @@ export default class ContactsView extends JetView {
 			click: () => {
 				this.show("contactsElements.contactsForm");
 				this.$$("Contactslist").disable();
-				this.app.callEvent("contactform:show", ["Add"]);
+				this.app.callEvent("contactform:show", [_("Add")]);
 			}
 		};
 
@@ -76,6 +78,8 @@ export default class ContactsView extends JetView {
 	}
 
 	init() {
+		const _ = this.app.getService("locale")._;
+
 		contacts.waitData.then(() => {
 			const Contactslist = this.$$("Contactslist");
 			Contactslist.sync(contacts);
@@ -85,7 +89,7 @@ export default class ContactsView extends JetView {
 			// eslint-disable-next-line no-shadow
 			this.on(this.app, "contact:switch", (id, mode, check) => {
 				this.$$("Contactslist").enable();
-				if (mode === "Add" && check) {
+				if (mode === _("Add") && check) {
 					id = this.contactList.getFirstId();
 				}
 				this.show(`/top/contacts?id=${id}/contactsElements.contactsProfile`);
