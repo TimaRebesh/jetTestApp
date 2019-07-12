@@ -1,13 +1,13 @@
 
 import {JetView} from "webix-jet";
-// import {statuses} from "../models/statuses";
-// import {activityTypes} from "../models/activityType";
-// import SettingsTable from "./settingsTable";
+import {statuses} from "../models/statuses";
+import {activitytypes} from "../models/activityType";
+import SettingsTable from "./settingsTable";
 
 export default class SettingsView extends JetView {
 	config() {
-		// const _ = this.app.getService("locale")._;
 		const lang = this.app.getService("locale").getLang();
+		const _ = this.app.getService("locale")._;
 
 		const segmented = {
 			view: "segmented",
@@ -15,31 +15,36 @@ export default class SettingsView extends JetView {
 			id: "SegmentedLanguage",
 			inputWidth: 300,
 			options: [
-				{id: "en", value: "EN"},
-				{id: "ru", value: "RU"}
+				{id: "en", value: _("EN")},
+				{id: "ru", value: _("RU")}
 			],
 			click: () => this.toggleLanguage()
 		};
 
 		return {
 			rows: [
-				segmented
-				// {
-
-				// 	cols: [
-				// 		{$subview: new SettingsTable(this.app, "",
-				//		activityTypes, "activityTypesTable", "Activity Types", "Icon", "Add type", "value")},
-				// 		{$subview: new SettingsTable(this.app, "",
-				//		statuses, "statusesTable", "Status", "Icon", "Add status", "name")}
-				// 	]
-				// }
+				{
+					cols: [
+						{}, {}, {},
+						segmented
+					]
+				},
+				{
+					cols: [
+						{$subview: new SettingsTable(this.app, "",
+							activitytypes, "activityTypesTable", "Activity Types", "Icon", "Add type", "new activity type")},
+						{view: "resizer"},
+						{$subview: new SettingsTable(this.app, "",
+							statuses, "statusesTable", "Statuses", "Icon", "Add status", "new contact status")}
+					]
+				}
 			]
 		};
 	}
 
 	toggleLanguage() {
-		const langs = this.app.getService("locale");
+		const languges = this.app.getService("locale");
 		const value = this.$$("SegmentedLanguage").getValue();
-		langs.setLang(value);
+		languges.setLang(value);
 	}
 }

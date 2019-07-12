@@ -1,23 +1,25 @@
 import {JetView} from "webix-jet";
+import {icons} from "../models/iconsData";
 
 export default class SettingsTable extends JetView {
-	constructor(app, name, data, localId, valHeader, valIcon, label, value) {
+	constructor(app, name, data, localId, headerName, valueIcon, label, value) {
 		super(app, name);
 		this._tdata = data;
-		this.localId = localId;
-		this.valHeader = valHeader;
-		this.valIcon = valIcon;
 		this.label = label;
+		this.localId = localId;
+		this.headerName = headerName;
+		this.valueIcon = valueIcon;
 		this.value = value;
 	}
 
 	config() {
+		const _ = this.app.getService("locale")._;
+
 		const label = {
 			view: "label",
-			label: this.label,
-			align: "center",
+			label: _(this.label),
 			localId: "label",
-			css: "settings_label"
+			css: "labelForSetTabl"
 		};
 
 		const table = {
@@ -29,28 +31,29 @@ export default class SettingsTable extends JetView {
 			columns: [
 				{
 					id: "Value",
-					header: this.valHeader,
+					header: _(this.headerName),
 					fillspace: true,
 					editor: "text"
 				},
 				{
 					id: "Icon",
-					header: this.valIcon,
+					header: _(this.valueIcon),
 					width: 150,
-					editor: "text"
+					editor: "select",
+					collection: icons
 				},
 				{
 					id: "",
 					template: "{common.trashIcon()}",
-					width: 60
+					width: 40
 				}
 			],
 			onClick: {
 				"wxi-trash": (e, id) => {
 					webix.confirm({
-						// text: `${_("Are you sure you want to delete the ")} ${_(this.valHeader)}`,
-						ok: "OK",
-						cancel: "Cancel"
+						text: _("Are you sure you want to delete this?"),
+						ok: _("OK"),
+						cancel: _("Cancel")
 					}).then(() => {
 						this._tdata.remove(id);
 					});
@@ -58,24 +61,24 @@ export default class SettingsTable extends JetView {
 				}
 			}
 		};
-		const button = {
+		const bottom = {
 			view: "toolbar",
+			css: "bottomSetTabl",
 			padding: 0,
 			elements: [
 				{},
 				{
 					view: "button",
-					label: this.label,
+					label: _(this.label),
 					type: "icon",
-					icon: "wxi-plus",
+					icon: "wxi-plus-square",
 					css: "webix_primary",
-					width: 300,
+					width: 150,
 					align: "center",
 					click: () => {
-						this._tdata.add({Value: this.value, Icon: "icon"});
+						this._tdata.add({Value: _(this.value), Icon: "icon"});
 					}
-				},
-				{}
+				}
 			]
 		};
 		return {
@@ -84,7 +87,7 @@ export default class SettingsTable extends JetView {
 				table,
 				{
 					cols: [
-						button
+						bottom
 					]
 				}
 			]
